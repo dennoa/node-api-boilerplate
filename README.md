@@ -1,4 +1,4 @@
-# backend-boilerplate
+# node-api-boilerplate
 
 * Uses ESM to allow ES modules in Node
 * Uses Winston for logging
