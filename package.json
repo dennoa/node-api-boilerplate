@@ -1,12 +1,17 @@
 {
   "name": "node-api-boilerplate",
+  "description": "Starting point for a node api",
   "version": "0.0.1",
   "scripts": {
-    "start": "node -r @std/esm -r dotenv/config .",
-    "dev": "nodemon -e js,pug,css -i './**/*.test.js' -r @std/esm -r dotenv/config .",
+    "start": "node -r @std/esm -r dotenv/config lib",
+    "dev": "nodemon -e js,pug,css -i test -r @std/esm -r dotenv/config lib",
     "lint": "eslint --ignore-path .gitignore .",
     "test": "ava",
-    "coverage": "nyc npm test && nyc report"
+    "coverage": "nyc --reporter html --require @std/esm npm test"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
   },
   "engines": {
     "node": ">=8.9.4"
@@ -14,7 +19,7 @@
   "@std/esm": "cjs",
   "dependencies": {
     "@std/esm": "^0.21.7",
-    "ajv": "^6.2.1",
+    "ajv": "^6.5.0",
     "axios": "^0.17.1",
     "bluebird": "^3.5.1",
     "body-parser": "~1.18.2",
@@ -40,20 +45,17 @@
     "sinon": "^4.4.2",
     "supertest": "^3.0.0"
   },
+  "homepage": "https://github.com/dennoa/node-api-boilerplate",
   "lock": false,
   "eslintConfig": {
     "extends": "airbnb-base",
     "rules": {
-      "indent": [
-        0,
-        4
-      ],
-      "semi": [
-        "error",
-        "never"
-      ],
+      "arrow-parens": 0,
+      "indent": [0, 4],
+      "semi": ["error", "never"],
       "comma-dangle": 0,
       "linebreak-style": 0,
+      "no-underscore-dangle": 0,
       "object-curly-newline": 0,
       "max-len": [
         1,
@@ -71,8 +73,6 @@
     "failWithoutAssertions": false,
     "tap": true,
     "compileEnhancements": false,
-    "require": [
-      "@std/esm"
-    ]
+    "require": ["@std/esm"]
   }
 }
