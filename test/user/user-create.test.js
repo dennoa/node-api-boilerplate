@@ -54,3 +54,11 @@ test.serial('should report unexpected errors', async t => {
   t.is(res.statusCode, 500)
   t.is(logger.error.called, true)
 })
+
+test.serial('should report unexpected failures', async t => {
+  model.findOne.returns(Promise.reject('failed')) // eslint-disable-line prefer-promise-reject-errors
+  const data = { username: 'test', firstName: 'Bob', lastName: 'Brown' }
+  const res = await create(data)
+  t.is(res.statusCode, 500)
+  t.is(logger.error.called, true)
+})
