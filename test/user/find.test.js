@@ -79,3 +79,17 @@ fields.forEach(field => {
     t.deepEqual(model.find.firstCall.args[0], { [field]: new RegExp('test', 'i') })
   })
 })
+
+test.serial('should require a JWT', async t => {
+  const res = await request(app)
+    .get('/user')
+    .set('Accept', 'application/json')
+    .send()
+  t.is(res.statusCode, 401)
+})
+
+test.serial('should require a valid JWT', async t => {
+  jwt = 'rubbish'
+  const res = await find({})
+  t.is(res.statusCode, 401)
+})

@@ -4,6 +4,7 @@ import sinon from 'sinon'
 
 import app from '../../lib/app'
 import routes from '../../lib/routes'
+import { onPasswordReset, removePasswordResetListener } from '../../lib/components/user/events'
 import model from '../../lib/components/user/model'
 
 app.use('/', routes)
@@ -50,4 +51,12 @@ test.serial('should return 404 when failing to find the user', async t => {
   model.findOne.returns(Promise.resolve(undefined))
   const res = await resetPassword({ username: 'bob' })
   t.is(res.statusCode, 404)
+})
+
+test.serial('should notify of a password reset event', async t => {
+  const listener = sinon.stub()
+  onPasswordReset(listener)
+  await resetPassword({ username: 'bob' })
+  t.is(listener.calledOnce, true)
+  removePasswordResetListener(listener)
 })

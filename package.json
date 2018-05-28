@@ -7,7 +7,7 @@
     "dev": "nodemon -e js,pug,css -i test -r @std/esm -r dotenv/config lib",
     "lint": "eslint --ignore-path .gitignore .",
     "test": "ava",
-    "coverage": "nyc --reporter html --require @std/esm npm test"
+    "coverage": "npm test && nyc --reporter html --require @std/esm npm test"
   },
   "directories": {
     "lib": "lib",

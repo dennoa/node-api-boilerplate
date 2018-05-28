@@ -95,3 +95,11 @@ test.serial('should report unexpected failures', async t => {
   t.is(res.statusCode, 500)
   t.is(logger.error.called, true)
 })
+
+test.serial('should return an error if it fails to hash the password', async t => {
+  sinon.stub(bcrypt, 'hash').yields(new Error('failed'))
+  const data = { username: 'bob', email: 'test@example.com', firstName: 'Bob', lastName: 'Brown' }
+  const res = await create(data)
+  bcrypt.hash.restore()
+  t.is(res.statusCode, 500)
+})
