@@ -5,10 +5,16 @@ import sinon from 'sinon'
 import app from '../../lib/app'
 import routes from '../../lib/routes'
 import model from '../../lib/components/user/model'
+import { toJwt } from '../../lib/components/user/auth-helper'
 
 app.use('/', routes)
 
 let user
+let jwt
+
+test.before(() => {
+  jwt = toJwt({ _id: '123' })
+})
 
 test.beforeEach(() => {
   user = {
@@ -28,6 +34,7 @@ function get(_id) {
   return request(app)
     .get(`/user/${_id}`)
     .set('Accept', 'application/json')
+    .set('Authorization', `Bearer ${jwt}`)
     .send()
 }
 

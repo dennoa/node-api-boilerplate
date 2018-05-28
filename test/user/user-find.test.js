@@ -4,12 +4,18 @@ import sinon from 'sinon'
 
 import app from '../../lib/app'
 import routes from '../../lib/routes'
+import { toJwt } from '../../lib/components/user/auth-helper'
 import model from '../../lib/components/user/model'
 
 app.use('/', routes)
 
 let users
 let findPromise
+let jwt
+
+test.before(() => {
+  jwt = toJwt({ _id: '123' })
+})
 
 test.beforeEach(() => {
   users = [
@@ -30,6 +36,7 @@ function find(query) {
   return request(app)
     .get('/user')
     .set('Accept', 'application/json')
+    .set('Authorization', `Bearer ${jwt}`)
     .query(query)
     .send()
 }

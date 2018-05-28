@@ -1,6 +1,7 @@
 import test from 'ava'
 import request from 'supertest'
 import sinon from 'sinon'
+import bcrypt from 'bcryptjs'
 
 import app from '../../lib/app'
 import routes from '../../lib/routes'
@@ -12,7 +13,7 @@ app.use('/', routes)
 let user
 
 test.beforeEach(() => {
-  user = { _id: '1' }
+  user = { _id: '1', username: 'test', firstName: 'bob', lastName: 'brown' }
   sinon.stub(model, 'create').returns(Promise.resolve(user))
   sinon.stub(model, 'findOne').returns(Promise.resolve())
   sinon.stub(logger, 'error')
@@ -32,24 +33,56 @@ function create(data) {
 }
 
 test.serial('should create a user', async t => {
-  const data = { username: 'test', firstName: 'Bob', lastName: 'Brown' }
+  const data = { username: 'bob', email: 'test@example.com', firstName: 'Bob', lastName: 'Brown' }
   const res = await create(data)
   t.is(res.statusCode, 200)
   t.deepEqual(res.body, { user })
-  t.deepEqual(model.create.firstCall.args[0], data)
+  const args = model.create.firstCall.args[0]
+  t.is(args.username, data.username)
+  t.is(args.email, data.email)
+  t.is(args.firstName, data.firstName)
+  t.is(args.lastName, data.lastName)
+})
+
+test.serial('should defaut the username to the email', async t => {
+  const data = { email: 'test@example.com', firstName: 'Bob', lastName: 'Brown' }
+  const res = await create(data)
+  t.is(res.statusCode, 200)
+  t.is(model.create.firstCall.args[0].username, data.email)
+})
+
+test.serial('should include a default password', async t => {
+  const data = { email: 'test@example.com', firstName: 'Bob', lastName: 'Brown' }
+  const res = await create(data)
+  t.is(res.statusCode, 200)
+  t.is(typeof model.create.firstCall.args[0].passwordHash, 'string')
+})
+
+test.serial('should allow password to be specified', async t => {
+  const data = { email: 'test@example.com', firstName: 'Bob', lastName: 'Brown', password: 'secret' }
+  const res = await create(data)
+  t.is(res.statusCode, 200)
+  t.is(bcrypt.compareSync(data.password, model.create.firstCall.args[0].passwordHash), true)
 })
 
 test.serial('should ensure a unique username', async t => {
   model.findOne.returns(Promise.resolve({ _id: '23' }))
-  const data = { username: 'test', firstName: 'Bob', lastName: 'Brown' }
+  const data = { username: 'test', email: 'test@example.com', firstName: 'Bob', lastName: 'Brown' }
   const res = await create(data)
   t.is(res.statusCode, 400)
   t.deepEqual(model.findOne.firstCall.args[0], { username: data.username })
 })
 
+test.serial('should require an email', async t => {
+  model.findOne.returns(Promise.resolve({ _id: '23' }))
+  const data = { username: 'test', firstName: 'Bob', lastName: 'Brown' }
+  const res = await create(data)
+  t.is(res.statusCode, 400)
+})
+
 test.serial('should report unexpected errors', async t => {
   model.findOne.throws(new Error())
-  const data = { username: 'test', firstName: 'Bob', lastName: 'Brown' }
+  const data = { username: 'test', email: 'test@example.com', firstName: 'Bob', lastName: 'Brown' }
   const res = await create(data)
   t.is(res.statusCode, 500)
   t.is(logger.error.called, true)
@@ -57,7 +90,7 @@ test.serial('should report unexpected errors', async t => {
 
 test.serial('should report unexpected failures', async t => {
   model.findOne.returns(Promise.reject('failed')) // eslint-disable-line prefer-promise-reject-errors
-  const data = { username: 'test', firstName: 'Bob', lastName: 'Brown' }
+  const data = { username: 'test', email: 'test@example.com', firstName: 'Bob', lastName: 'Brown' }
   const res = await create(data)
   t.is(res.statusCode, 500)
   t.is(logger.error.called, true)
