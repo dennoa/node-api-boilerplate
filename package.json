@@ -16,7 +16,9 @@
   "engines": {
     "node": ">=8.9.4"
   },
-  "@std/esm": "cjs",
+  "esm": {
+    "mode": "auto"
+  },
   "dependencies": {
     "ajv": "^6.5.0",
     "axios": "^0.17.1",
@@ -54,14 +56,8 @@
     "extends": "airbnb-base",
     "rules": {
       "arrow-parens": 0,
-      "indent": [
-        0,
-        4
-      ],
-      "semi": [
-        "error",
-        "never"
-      ],
+      "indent": [0, 4],
+      "semi": ["error", "never"],
       "comma-dangle": 0,
       "linebreak-style": 0,
       "no-underscore-dangle": 0,
@@ -82,9 +78,6 @@
     "failWithoutAssertions": false,
     "tap": true,
     "compileEnhancements": false,
-    "require": [
-      "esm",
-      "dotenv/config"
-    ]
+    "require": ["esm", "dotenv/config"]
   }
 }
