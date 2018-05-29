@@ -7,7 +7,11 @@ body {
 }
 
 a {
-  color: white;
+  color: lightgray;
+}
+
+p {
+  color: lightgray;
 }
 
 .logo svg {

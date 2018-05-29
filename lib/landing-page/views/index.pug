@@ -15,5 +15,5 @@ html(lang='en')
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="100,10 40,198 190,78 10,78 160,198"></polygon>
             </svg>
-            h2 #{info.version}
-            <a href="#{info.homepage}">#{info.homepage}</a>
+        p Version #{info.version} running in the #{config.env} environment
+        p <a href="#{info.homepage}">#{info.homepage}</a>
