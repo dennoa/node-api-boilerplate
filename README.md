@@ -1,6 +1,6 @@
 # node-api-boilerplate
 
-* ESM to allow ES modules in Node
+* ESM to allow ES modules in Node <https://www.npmjs.com/package/esm>
 * Mongoose for db stuff <https://www.npmjs.com/package/mongoose>
 * Ajv for validation <https://www.npmjs.com/package/ajv>
 * Swagger for API docs <https://swagger.io/>

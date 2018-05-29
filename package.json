@@ -3,11 +3,11 @@
   "description": "Starting point for a node api",
   "version": "0.0.1",
   "scripts": {
-    "start": "node -r @std/esm -r dotenv/config lib",
-    "dev": "nodemon -e js,pug,css -i test -r @std/esm -r dotenv/config lib",
+    "start": "node -r esm -r dotenv/config lib",
+    "dev": "nodemon -e js,pug,css -i test -r esm -r dotenv/config lib",
     "lint": "eslint --ignore-path .gitignore .",
     "test": "ava",
-    "coverage": "npm test && nyc --reporter html --require @std/esm npm test"
+    "coverage": "npm test && nyc --reporter html --require esm npm test"
   },
   "directories": {
     "lib": "lib",
@@ -18,7 +18,6 @@
   },
   "@std/esm": "cjs",
   "dependencies": {
-    "@std/esm": "^0.21.7",
     "ajv": "^6.5.0",
     "axios": "^0.17.1",
     "bcryptjs": "^2.4.3",
@@ -28,6 +27,7 @@
     "cors": "^2.8.4",
     "deepmerge": "^2.0.1",
     "dotenv": "^5.0.0",
+    "esm": "^3.0.39",
     "express": "~4.15.5",
     "jsonwebtoken": "^8.2.1",
     "mongoose": "^5.0.6",
@@ -54,8 +54,14 @@
     "extends": "airbnb-base",
     "rules": {
       "arrow-parens": 0,
-      "indent": [0, 4],
-      "semi": ["error", "never"],
+      "indent": [
+        0,
+        4
+      ],
+      "semi": [
+        "error",
+        "never"
+      ],
       "comma-dangle": 0,
       "linebreak-style": 0,
       "no-underscore-dangle": 0,
@@ -76,6 +82,9 @@
     "failWithoutAssertions": false,
     "tap": true,
     "compileEnhancements": false,
-    "require": ["@std/esm", "dotenv/config"]
+    "require": [
+      "esm",
+      "dotenv/config"
+    ]
   }
 }
